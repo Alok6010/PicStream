@@ -1,9 +1,11 @@
 package com.example.test
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.test.Adapter.MessageAdapter
 import com.example.test.Model.MessageModel
@@ -13,6 +15,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -21,6 +24,20 @@ import java.util.Locale
 class ChatActivity : AppCompatActivity() {
 
     private  lateinit var binding: ActivityChatBinding
+
+    //For Image/Gif
+    private var selectedMediaUri: Uri? = null
+    private val selectMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri?.let {
+            selectedMediaUri = it
+            val mimeType = contentResolver.getType(it)
+            if (mimeType != null && mimeType.startsWith("image/gif")) {
+                uploadMediaToFirebaseStorage(it, "gif")
+            } else {
+                uploadMediaToFirebaseStorage(it, "image")
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -34,14 +51,24 @@ class ChatActivity : AppCompatActivity() {
 
         //getData(intent.getStringExtra("chatId"))
 
+
+        // Set the title to the user's name
+        val userName = intent.getStringExtra("userName")
+        supportActionBar?.title = userName
+
         verifyChatId()
 
         binding.imageView4.setOnClickListener {
             if (binding.yourmessage.text!!.isEmpty()){
                 Toast.makeText(this, "please enter your message", Toast.LENGTH_SHORT).show()
             }else{
-                storeData(binding.yourmessage.text.toString())
+                storeData(binding.yourmessage.text.toString(),"text")
             }
+        }
+
+        // For Image/GIF selection
+        binding.textInputLayout.setEndIconOnClickListener {
+            selectMediaLauncher.launch("image/*")
         }
 
     }
@@ -51,8 +78,8 @@ class ChatActivity : AppCompatActivity() {
     private var chatId : String? = null
     private var receiverId : String? = null
 
-    private fun verifyChatId(){
 
+    private fun verifyChatId(){
         receiverId = intent.getStringExtra("userId")
         senderId = FirebaseAuth.getInstance().currentUser?.phoneNumber
         chatId =  senderId+receiverId
@@ -137,13 +164,38 @@ class ChatActivity : AppCompatActivity() {
 //
 //    }
 
-    private fun storeData(msg: String) {
+
+
+
+    //To send image/gif
+    private fun uploadMediaToFirebaseStorage(mediaUri: Uri, type: String) {
+        val fileName = "${System.currentTimeMillis()}.${if (type == "gif") "gif" else "jpg"}"
+        val storageReference = FirebaseStorage.getInstance().reference.child("chat_media/$fileName")
+        val uploadTask = storageReference.putFile(mediaUri)
+
+        uploadTask.continueWithTask { task ->
+            if (!task.isSuccessful) {
+                task.exception?.let { throw it }
+            }
+            storageReference.downloadUrl
+        }.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                task.result?.let { uri ->
+                    storeData(uri.toString(), type)
+                }
+            } else {
+                Toast.makeText(this, "Upload failed", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+    private fun storeData(msg: String,type:String) {
         val currentDate: String = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
         val currentTime: String = SimpleDateFormat("HH:mm: a", Locale.getDefault()).format(Date())
 
 //        receiverId = intent.getStringExtra("userId")
         val map = hashMapOf<String, String>()
         map["message"] = msg
+        map["type"]=type
         map["senderId"] = senderId!!
 //        map["receiverId"] = receiverId!!
         map["currentDate"] = currentDate

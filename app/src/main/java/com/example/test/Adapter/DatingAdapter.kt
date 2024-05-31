@@ -28,6 +28,7 @@ class DatingAdapter(val context : Context , val list: ArrayList<UserModel>) : Re
         holder.binding.chat.setOnClickListener() {
             val intent = Intent(context, ChatActivity::class.java)
             intent.putExtra("userId",list[position].number)
+            intent.putExtra("userName", list[position].name) // add userName
             context.startActivity(intent)
         }
     }

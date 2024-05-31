@@ -11,7 +11,7 @@
 
     <item android:id="@+id/shareApp"
         android:title="Share App"
-        android:icon="@drawable/rateus"/>
+        android:icon="@drawable/share"/>
 
     <item android:id="@+id/termsAndConditions"
         android:title="Terms Conditions"

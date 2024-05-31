@@ -16,15 +16,19 @@
         android:layout_marginHorizontal="12dp"
         android:layout_marginBottom="30dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:endIconDrawable="@drawable/image_1"
+        app:endIconMode="custom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/imageView4"
         app:layout_constraintStart_toStartOf="parent">
 
+        
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/yourmessage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:hint="Enter your message" />
+        
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -44,13 +48,14 @@
         android:id="@+id/recyclerView2"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/textInputLayout"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/layout_sender_message"
+        app:layout_constraintBottom_toTopOf="@id/textInputLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        tools:listitem="@layout/layout_sender_message" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

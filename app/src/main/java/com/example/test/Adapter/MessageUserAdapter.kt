@@ -46,6 +46,15 @@ class MessageUserAdapter(
 
                             holder.binding.userName.text = data.name
 
+                            // Pass userName along with userId and chatId
+                            holder.itemView.setOnClickListener {
+                                val intent = Intent(context, ChatActivity::class.java)
+                                intent.putExtra("chat_Id", chatKey[position])
+                                intent.putExtra("userId", list[position])
+                                intent.putExtra("userName", data.name) // add userName
+                                context.startActivity(intent)
+                            }
+
 
                         }
                     }
@@ -57,12 +66,12 @@ class MessageUserAdapter(
                 }
             )
 
-        holder.itemView.setOnClickListener {
-            val intent = Intent(context, ChatActivity::class.java)
-            intent.putExtra("chat_Id", chatKey[position])
-            intent.putExtra("userId", list[position])
-            context.startActivity(intent)
-        }
+//        holder.itemView.setOnClickListener {
+//            val intent = Intent(context, ChatActivity::class.java)
+//            intent.putExtra("chat_Id", chatKey[position])
+//            intent.putExtra("userId", list[position])
+//            context.startActivity(intent)
+//        }
 
 
 
