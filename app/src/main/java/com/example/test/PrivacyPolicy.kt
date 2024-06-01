@@ -81,8 +81,6 @@ We may update this Privacy Policy from time to time. We will notify you of any c
 If you have any questions about this Privacy Policy, please contact us:
 
 By Email: alok15082002@gmail.com
-
-            If you have any questions, please contact us at alok15082002@gmail.com.
         """.trimIndent()
 
 

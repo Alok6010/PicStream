@@ -61,15 +61,13 @@ Changes to Terms
 We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will provide at least 30 days' notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
 
 Governing Law
-These Terms shall be governed and construed in accordance with the laws of [Your Country/State], without regard to its conflict of law provisions.
+These Terms shall be governed and construed in accordance with the laws of Indian Government, without regard to its conflict of law provisions.
 
 Contact Us
 If you have any questions about these Terms, please contact us:
 
 Email: alok15082002@gmail.com
 Phone Number: 9260971466
-
-            If you have any questions about these Terms, please contact us at alok15082002@gmail.com.
         """.trimIndent()
 
     }

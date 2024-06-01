@@ -1,14 +1,17 @@
 package com.example.test.Adapter
 
+import android.animation.Animator
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.test.ChatActivity
 import com.example.test.Model.UserModel
 import com.example.test.databinding.ItemUserLayoutBinding
+import com.example.test.utlis.PreferencesHelper
 
 class DatingAdapter(val context : Context , val list: ArrayList<UserModel>) : RecyclerView.Adapter<DatingAdapter.DatingViewHolder>() {
     inner class DatingViewHolder (val binding : ItemUserLayoutBinding)
@@ -31,6 +34,21 @@ class DatingAdapter(val context : Context , val list: ArrayList<UserModel>) : Re
             intent.putExtra("userName", list[position].name) // add userName
             context.startActivity(intent)
         }
+
+        holder.binding.favorite.setOnClickListener {
+            PreferencesHelper.saveFavoriteUser(context, list[position])
+            holder.binding.heartAnimation.visibility = View.VISIBLE
+            holder.binding.heartAnimation.playAnimation()
+            holder.binding.heartAnimation.addAnimatorListener(object : Animator.AnimatorListener {
+                override fun onAnimationStart(animation: Animator) {}
+                override fun onAnimationEnd(animation: Animator) {
+                    holder.binding.heartAnimation.visibility = View.GONE
+                }
+                override fun onAnimationCancel(animation: Animator) {}
+                override fun onAnimationRepeat(animation: Animator) {}
+            })
+        }
+
     }
 
     override fun getItemCount(): Int {

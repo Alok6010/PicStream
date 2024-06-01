@@ -53,9 +53,6 @@ For any technical assistance or inquiries, please contact:
 Name: Alok Mishra
 Phone Number: 9260971466
 Email: alok15082002@gmail.com
-
-
-            If you have any questions , please contact us at alok15082002@gmail.com.
         """.trimIndent()
 
     }

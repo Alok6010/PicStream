@@ -56,9 +56,9 @@ class ProfileFragment : Fragment() {
             requireActivity().finish()
         }
 
-        binding.edtprofile.setOnClickListener {
-          // startActivity(Intent(requireContext(), EditProfileActivity::class.java))
-        }
+//        binding.edtprofile.setOnClickListener {
+//          // startActivity(Intent(requireContext(), EditProfileActivity::class.java))
+//        }
 
 
        return binding.root

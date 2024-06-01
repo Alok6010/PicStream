@@ -1,11 +1,13 @@
 package com.example.test
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
@@ -51,10 +53,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         when(item.itemId) {
             R.id.favorite -> {
                 Toast.makeText(this, "Favorite", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, FavoriteActivity::class.java))
 
             }
             R.id.rateus -> {
                 Toast.makeText(this, "Rate Us", Toast.LENGTH_SHORT).show()
+                showRateDialog()
 
             }
             R.id.termsAndConditions -> {
@@ -65,6 +69,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.shareApp -> {
                 Toast.makeText(this, "shareApp", Toast.LENGTH_SHORT).show()
+                showShareDialog()
 
             }
             R.id.privacypolicy -> {
@@ -97,5 +102,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             super.onBackPressed()
     }
 
+    private fun showRateDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Rate Us")
+        builder.setMessage("Thank you for your interest in rating our app. Currently, our app is not available on the Play Store.")
+        builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+        builder.show()
+    }
+
+    private fun showShareDialog() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Share App")
+        builder.setMessage("Thank you for your interest for Sharing our app. Currently, our app is not available on the Play Store.")
+        builder.setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+        builder.show()
+    }
 
 }

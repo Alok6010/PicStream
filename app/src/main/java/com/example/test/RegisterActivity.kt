@@ -41,6 +41,10 @@ class RegisterActivity : AppCompatActivity() {
             selectImages.launch("image/*")
         }
 
+        binding.termsLink.setOnClickListener {
+            startActivity(Intent(this, TnCActivity::class.java))
+        }
+
         binding.SaveData.setOnClickListener {
             validateData()
            // startActivity(Intent(this, MainActivity::class.java))
@@ -55,7 +59,7 @@ class RegisterActivity : AppCompatActivity() {
             || binding.userEmail.text.toString().isEmpty()
             || binding.userGender.text.toString().isEmpty()){
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show()
-        }else if(!binding.termsAndConditions.isChecked){
+        }else if(!binding.termsAndConditionsCheckbox.isChecked){
             Toast.makeText(this, "Please accept terms and conditions", Toast.LENGTH_SHORT).show()
         }
 
