@@ -1,5 +1,6 @@
 package com.example.test
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
@@ -48,8 +49,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.favourate -> {
-                Toast.makeText(this, "Favourite", Toast.LENGTH_SHORT).show()
+            R.id.favorite -> {
+                Toast.makeText(this, "Favorite", Toast.LENGTH_SHORT).show()
 
             }
             R.id.rateus -> {
@@ -58,6 +59,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.termsAndConditions -> {
                 Toast.makeText(this, "Terms And Conditions", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, TnCActivity::class.java))
+
 
             }
             R.id.shareApp -> {
@@ -66,10 +69,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             }
             R.id.privacypolicy -> {
                 Toast.makeText(this, "Privacy Policy ", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, PrivacyPolicy::class.java))
 
             }
             R.id.developer -> {
                 Toast.makeText(this, "Developer", Toast.LENGTH_SHORT).show()
+                startActivity(Intent(this, Developer::class.java))
 
             }
         }
