@@ -1,9 +1,7 @@
-package com.example.test
+package com.example.test.auth
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
 
@@ -12,12 +10,11 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.test.MainActivity
+import com.example.test.R
 import com.example.test.databinding.ActivityLoginBinding
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.PhoneAuthCredential
 import com.google.firebase.auth.PhoneAuthOptions
 import com.google.firebase.auth.PhoneAuthProvider
@@ -25,6 +22,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.messaging.FirebaseMessaging
 import java.util.concurrent.TimeUnit
 
 class LoginActivity : AppCompatActivity() {
@@ -128,7 +126,7 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     checkUserExists(binding.userNumber.text.toString())
 
-                   startActivity(Intent(this,RegisterActivity::class.java))
+                   startActivity(Intent(this, RegisterActivity::class.java))
                     finish()
                 } else {
                     dialog.dismiss()
@@ -143,10 +141,13 @@ class LoginActivity : AppCompatActivity() {
                 override fun onDataChange(p0: DataSnapshot) {
                     if (p0.exists()){
                         dialog.dismiss()
-                        startActivity(Intent(this@LoginActivity,MainActivity::class.java))
+
+
+
+                        startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                         finish()
                     }else{
-                        startActivity(Intent(this@LoginActivity,RegisterActivity::class.java))
+                        startActivity(Intent(this@LoginActivity, RegisterActivity::class.java))
                         finish()
                     }
                 }

@@ -11,7 +11,8 @@ data class UserModel(
     val status : String? = "",
     val email : String? = "",
     val password : String? = "",
-    val id : String? = ""
+    val id : String? = "",
+    val fcmToken : String? = ""
 
 
 

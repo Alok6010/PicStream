@@ -62,11 +62,11 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name=".RegisterActivity"
+            android:name=".auth.RegisterActivity"
             android:exported="false"
             android:theme="@style/Theme.Project02.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.Project02.NoActionBar">
             <intent-filter>
@@ -78,6 +78,18 @@
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+        <service android:name=".utlis.MyFirebaseMessagingService"
+            android:exported="false"
+            android:permission="com.google.android.c2dm.permission.Send">
+
+
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.android.c2dm.intent.Reciever" />
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>

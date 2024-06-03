@@ -1,8 +1,10 @@
 package com.example.test
 
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,21 +25,23 @@ import java.util.Locale
 
 class ChatActivity : AppCompatActivity() {
 
-    private  lateinit var binding: ActivityChatBinding
+    private lateinit var binding: ActivityChatBinding
 
     //For Image/Gif
     private var selectedMediaUri: Uri? = null
-    private val selectMediaLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let {
-            selectedMediaUri = it
-            val mimeType = contentResolver.getType(it)
-            if (mimeType != null && mimeType.startsWith("image/gif")) {
-                uploadMediaToFirebaseStorage(it, "gif")
-            } else {
-                uploadMediaToFirebaseStorage(it, "image")
+    private val selectMediaLauncher =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                selectedMediaUri = it
+                val mimeType = contentResolver.getType(it)
+                if (mimeType != null && mimeType.startsWith("image/gif")) {
+                    uploadMediaToFirebaseStorage(it, "gif")
+                } else {
+                    uploadMediaToFirebaseStorage(it, "image")
+                }
             }
         }
-    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -59,10 +63,10 @@ class ChatActivity : AppCompatActivity() {
         verifyChatId()
 
         binding.imageView4.setOnClickListener {
-            if (binding.yourmessage.text!!.isEmpty()){
+            if (binding.yourmessage.text!!.isEmpty()) {
                 Toast.makeText(this, "please enter your message", Toast.LENGTH_SHORT).show()
-            }else{
-                storeData(binding.yourmessage.text.toString(),"text")
+            } else {
+                storeData(binding.yourmessage.text.toString(), "text")
             }
         }
 
@@ -71,34 +75,41 @@ class ChatActivity : AppCompatActivity() {
             selectMediaLauncher.launch("image/*")
         }
 
+
+        // Setup keyboard visibility listener
+        setupKeyboardVisibilityListener()
+
+        // Set padding for the RecyclerView
+        setRecyclerViewPadding()
+
     }
 
 
-    private var senderId : String? = null
-    private var chatId : String? = null
-    private var receiverId : String? = null
+    private var senderId: String? = null
+    private var chatId: String? = null
+    private var receiverId: String? = null
 
 
-    private fun verifyChatId(){
+    private fun verifyChatId() {
         receiverId = intent.getStringExtra("userId")
         senderId = FirebaseAuth.getInstance().currentUser?.phoneNumber
-        chatId =  senderId+receiverId
-        val reverseChatId = receiverId+senderId
+        chatId = senderId + receiverId
+        val reverseChatId = receiverId + senderId
 
         val reference = FirebaseDatabase.getInstance().getReference("Chats")
-        reference.addListenerForSingleValueEvent(object : ValueEventListener{
+        reference.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                if(snapshot.hasChild(chatId!!)){
+                if (snapshot.hasChild(chatId!!)) {
                     // Debugging: Check if correct chatId is found
                     Log.d("ChatActivity", "ChatId Found: $chatId")
                     getData(chatId)
-                }else if(snapshot.hasChild(reverseChatId)) {
+                } else if (snapshot.hasChild(reverseChatId)) {
                     chatId = reverseChatId
                     // Debugging: Check if correct chatId is found after reversing
                     Log.d("ChatActivity", "Reverse ChatId Found: $chatId")
 
                     getData(chatId!!)
-                }else{
+                } else {
                     // Debugging: If no chatId is found
                     Log.d("ChatActivity", "ChatId not found")
                     Toast.makeText(this@ChatActivity, "Chat not found", Toast.LENGTH_SHORT).show()
@@ -115,20 +126,23 @@ class ChatActivity : AppCompatActivity() {
     }
 
 
-
-
     private fun getData(chatId: String?) {
 
         FirebaseDatabase.getInstance().getReference("Chats")
-            .child(chatId!!).addValueEventListener(object : ValueEventListener{
+            .child(chatId!!).addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     val list = arrayListOf<MessageModel>()
-                     for (show in snapshot.children){
-                         list.add(show.getValue(MessageModel::class.java)!!)
-                     }
+                    for (show in snapshot.children) {
+                        list.add(show.getValue(MessageModel::class.java)!!)
+                    }
 
-                    binding.recyclerView2.adapter = MessageAdapter(this@ChatActivity,list)
+                    binding.recyclerView2.adapter = MessageAdapter(this@ChatActivity, list)
+
+                    // Scroll to the bottom
+                    binding.recyclerView2.post {
+                        binding.recyclerView2.scrollToPosition(list.size - 1)
+                    }
 
                 }
 
@@ -139,7 +153,6 @@ class ChatActivity : AppCompatActivity() {
             })
 
     }
-
 
 
 //    private fun sendMessage(msg: String) {
@@ -165,8 +178,6 @@ class ChatActivity : AppCompatActivity() {
 //    }
 
 
-
-
     //To send image/gif
     private fun uploadMediaToFirebaseStorage(mediaUri: Uri, type: String) {
         val fileName = "${System.currentTimeMillis()}.${if (type == "gif") "gif" else "jpg"}"
@@ -188,14 +199,15 @@ class ChatActivity : AppCompatActivity() {
             }
         }
     }
-    private fun storeData(msg: String,type:String) {
+
+    private fun storeData(msg: String, type: String) {
         val currentDate: String = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date())
         val currentTime: String = SimpleDateFormat("HH:mm: a", Locale.getDefault()).format(Date())
 
 //        receiverId = intent.getStringExtra("userId")
         val map = hashMapOf<String, String>()
         map["message"] = msg
-        map["type"]=type
+        map["type"] = type
         map["senderId"] = senderId!!
 //        map["receiverId"] = receiverId!!
         map["currentDate"] = currentDate
@@ -204,13 +216,51 @@ class ChatActivity : AppCompatActivity() {
 
         reference.child(reference.push().key!!)
             .setValue(map).addOnCompleteListener {
-                if (it.isSuccessful){
-                    Toast.makeText(this, "Message Sent", Toast.LENGTH_SHORT).show()
+                if (it.isSuccessful) {
                     binding.yourmessage.text = null
-                }else{
+
+                    Toast.makeText(this, "Message Sent", Toast.LENGTH_SHORT).show()
+
+                } else {
                     Toast.makeText(this, "Something went Wrong", Toast.LENGTH_SHORT).show()
                 }
             }
+    }
+
+
+    private fun setupKeyboardVisibilityListener() {
+        val rootView = window.decorView.findViewById<View>(android.R.id.content)
+        rootView.viewTreeObserver.addOnGlobalLayoutListener {
+            val rect = Rect()
+            rootView.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+            val isKeyboardShown = keypadHeight > screenHeight * 0.15
+
+            if (isKeyboardShown) {
+                // Scroll to the bottom when the keyboard is shown
+                binding.recyclerView2.post {
+                    binding.recyclerView2.scrollToPosition(binding.recyclerView2.adapter!!.itemCount - 1)
+                }
+            }
+        }
+    }
+
+    private fun setRecyclerViewPadding() {
+        val actionBarHeight = supportActionBar?.height ?: 0
+        val statusBarHeight = getStatusBarHeight()
+
+        val topPadding = actionBarHeight + statusBarHeight
+        binding.recyclerView2.setPadding(0, topPadding, 0, 0)
+    }
+
+    private fun getStatusBarHeight(): Int {
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
     }
 
 }

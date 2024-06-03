@@ -1,18 +1,25 @@
-package com.example.test
+package com.example.test.auth
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.example.test.MainActivity
 import com.example.test.Model.UserModel
+import com.example.test.R
+import com.example.test.TnCActivity
 import com.example.test.databinding.ActivityRegisterBinding
 import com.example.test.utlis.Config
 import com.example.test.utlis.Config.hideDialog
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 
 class RegisterActivity : AppCompatActivity() {
@@ -94,30 +101,44 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun storeData(imageUrl : Uri?) {
 
-        val data = UserModel(
-            name = binding.userName.text.toString(),
-            email = binding.userEmail.text.toString(),
-            city = binding.userCity.text.toString(),
-            gender = binding.userGender.text.toString(),
-            number = FirebaseAuth.getInstance().currentUser!!.phoneNumber!!,
-            image = imageUrl.toString()
-        )
-
-
-        FirebaseDatabase.getInstance().getReference("users")
-            .child(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!)
-            .setValue(data)
-            .addOnCompleteListener{
-                hideDialog()
-                if(it.isSuccessful){
-                    startActivity(Intent(this, MainActivity::class.java))
-                    finish()
-                    Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
-                }else{
-
-                    Toast.makeText(this, it.exception!!.message, Toast.LENGTH_SHORT).show()
-                }
+//        var token : String? = null
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                 return@OnCompleteListener
             }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            val data = UserModel(
+                name = binding.userName.text.toString(),
+                email = binding.userEmail.text.toString(),
+                city = binding.userCity.text.toString(),
+                gender = binding.userGender.text.toString(),
+                number = FirebaseAuth.getInstance().currentUser!!.phoneNumber!!,
+                image = imageUrl.toString(),
+                fcmToken = token
+            )
+
+
+            FirebaseDatabase.getInstance().getReference("users")
+                .child(FirebaseAuth.getInstance().currentUser!!.phoneNumber!!)
+                .setValue(data)
+                .addOnCompleteListener{
+                    hideDialog()
+                    if(it.isSuccessful){
+                        startActivity(Intent(this, MainActivity::class.java))
+                        finish()
+                        Toast.makeText(this, "Registration successful", Toast.LENGTH_SHORT).show()
+                    }else{
+
+                        Toast.makeText(this, it.exception!!.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+
+        })
+
 
     }
 }
