@@ -1,18 +1,15 @@
 package com.example.test.auth
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.test.MainActivity
 import com.example.test.Model.UserModel
-import com.example.test.R
-import com.example.test.TnCActivity
+import com.example.test.navdrawer.TnCActivity
 import com.example.test.databinding.ActivityRegisterBinding
 import com.example.test.utlis.Config
 import com.example.test.utlis.Config.hideDialog

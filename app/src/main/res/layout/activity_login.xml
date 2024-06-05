@@ -5,26 +5,27 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/light_blue"
+    android:background="@color/color_primary"
     android:gravity="center"
     tools:context=".auth.LoginActivity">
 
    <ImageView
        android:id="@+id/imageView2"
        android:layout_width="match_parent"
-       android:layout_height="350dp"
-       android:background="@color/light_blue"
+       android:layout_height="370dp"
+       android:background="@drawable/login_image_111"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintStart_toStartOf="parent"
        app:layout_constraintTop_toTopOf="parent"
-       android:src="@drawable/loginback"
+       android:scaleType="fitXY"
+       android:layout_marginTop="20dp"
        />
     
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/NumberLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="-70dp"
+        android:layout_marginTop="-45dp"
         app:cardCornerRadius="12dp"
         app:cardElevation="7dp"
         android:layout_marginHorizontal="36dp"

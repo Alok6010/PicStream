@@ -2,28 +2,28 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item android:id="@+id/favorite"
-        android:title="Favourate"
-        android:icon="@drawable/favourite"/>
+        android:title="Favorites"
+        android:icon="@drawable/favorite_1"/>
 
     <item android:id="@+id/rateus"
         android:title="Rate Us"
-        android:icon="@drawable/rateus"/>
+        android:icon="@drawable/rateus_2"/>
 
     <item android:id="@+id/shareApp"
         android:title="Share App"
-        android:icon="@drawable/share"/>
+        android:icon="@drawable/share_1"/>
 
     <item android:id="@+id/termsAndConditions"
         android:title="Terms Conditions"
-        android:icon="@drawable/terms"/>
+        android:icon="@drawable/terms_1"/>
 
     <item android:id="@+id/privacypolicy"
         android:title="Privacy Policy"
-        android:icon="@drawable/privacypolicy"/>
+        android:icon="@drawable/privacy_1"/>
 
     <item android:id="@+id/developer"
         android:title="Developer"
-        android:icon="@drawable/developer"/>
+        android:icon="@drawable/developer_1"/>
 
 
 </menu>

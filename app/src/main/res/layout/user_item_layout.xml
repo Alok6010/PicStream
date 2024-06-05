@@ -12,8 +12,8 @@
         android:layout_margin="8dp"
         android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:src="@drawable/woman"
             android:id="@+id/userImage"/>
 
@@ -23,8 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="16dp"
-            android:textSize="25dp"
-            android:text="Alok Mishra"
+            android:textSize="26dp"
+            android:text="User"
             android:textColor="@color/black"/>
 
     </LinearLayout>

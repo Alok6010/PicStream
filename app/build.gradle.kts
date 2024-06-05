@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.test"
-        minSdk = 26
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -73,5 +73,8 @@ dependencies {
 
     //lottie depenfdency
     implementation ("com.airbnb.android:lottie:5.0.3")
+
+    //gif
+    implementation ("pl.droidsonroids.gif:android-gif-drawable:1.2.28")
 
 }

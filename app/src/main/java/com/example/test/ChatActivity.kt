@@ -238,10 +238,17 @@ class ChatActivity : AppCompatActivity() {
             val isKeyboardShown = keypadHeight > screenHeight * 0.15
 
             if (isKeyboardShown) {
+//                // Scroll to the bottom when the keyboard is shown
+//                binding.recyclerView2.post {
+//                    binding.recyclerView2.scrollToPosition(binding.recyclerView2.adapter!!.itemCount - 1)
+//                }
                 // Scroll to the bottom when the keyboard is shown
                 binding.recyclerView2.post {
-                    binding.recyclerView2.scrollToPosition(binding.recyclerView2.adapter!!.itemCount - 1)
+                    binding.recyclerView2.adapter?.let {
+                        binding.recyclerView2.scrollToPosition(it.itemCount - 1)
+                    }
                 }
+
             }
         }
     }

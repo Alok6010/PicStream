@@ -12,7 +12,8 @@ data class UserModel(
     val email : String? = "",
     val password : String? = "",
     val id : String? = "",
-    val fcmToken : String? = ""
+    val fcmToken : String? = "",
+    var isFavorite : Boolean = false
 
 
 

@@ -6,6 +6,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.test.ChatActivity
@@ -24,6 +25,8 @@ class DatingAdapter(val context : Context , val list: ArrayList<UserModel>) : Re
 
     override fun onBindViewHolder(holder: DatingViewHolder, position: Int) {
 
+        val user = list[position]
+
         holder.binding.textView5.text= list[position].name
         holder.binding.textView4.text= list[position].email
         Glide.with(context).load(list[position].image).into(holder.binding.userImage)
@@ -35,22 +38,37 @@ class DatingAdapter(val context : Context , val list: ArrayList<UserModel>) : Re
             context.startActivity(intent)
         }
 
-        holder.binding.favorite.setOnClickListener {
-            PreferencesHelper.saveFavoriteUser(context, list[position])
+
+        // Update the favorite icon and animation based on user.isFavorite
+        if (user.isFavorite) {
             holder.binding.heartAnimation.visibility = View.VISIBLE
-            holder.binding.heartAnimation.playAnimation()
-            holder.binding.heartAnimation.addAnimatorListener(object : Animator.AnimatorListener {
-                override fun onAnimationStart(animation: Animator) {}
-                override fun onAnimationEnd(animation: Animator) {
-                    holder.binding.heartAnimation.visibility = View.GONE
-                }
-                override fun onAnimationCancel(animation: Animator) {}
-                override fun onAnimationRepeat(animation: Animator) {}
-            })
+            holder.binding.heartAnimation.frame = holder.binding.heartAnimation.maxFrame.toInt()
+        } else {
+            holder.binding.heartAnimation.visibility = View.GONE
         }
 
+        holder.binding.favorite.setOnClickListener {
+            user.isFavorite = !user.isFavorite
+            PreferencesHelper.saveFavoriteUser(context, user)
+            if (user.isFavorite) {
+                Toast.makeText(context, "Saved to Favorites", Toast.LENGTH_SHORT).show()
+                holder.binding.heartAnimation.visibility = View.VISIBLE
+                holder.binding.heartAnimation.playAnimation()
+                holder.binding.heartAnimation.addAnimatorListener(object : Animator.AnimatorListener {
+                    override fun onAnimationStart(animation: Animator) {}
+                    override fun onAnimationEnd(animation: Animator) {
+                        holder.binding.heartAnimation.visibility = View.GONE
+                    }
+                    override fun onAnimationCancel(animation: Animator) {}
+                    override fun onAnimationRepeat(animation: Animator) {}
+                })
+            } else {
+                Toast.makeText(context, "Removed from Favorites", Toast.LENGTH_SHORT).show()
+                holder.binding.heartAnimation.visibility = View.GONE
+            }
+            notifyItemChanged(position)
+        }
     }
-
     override fun getItemCount(): Int {
         return list.size
     }
